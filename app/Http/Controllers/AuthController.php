@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FileRequest;
 use App\Models\User;
 use App\Models\Member;
+use App\Models\userProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -282,6 +284,80 @@ try{
             ]);
         }
         // i am making my frist push
+     
+        #[OA\Post(
+    path: "/api/user/profile-image",
+    summary: "Upload user profile image",
+    tags: ["Libry"],
+    security: [["bearerAuth" => []]],
+    requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\MediaType(
+            mediaType: "multipart/form-data",
+            schema: new OA\Schema(
+                type: "object",
+                required: ["file"],
+                properties: [
+                    new OA\Property(
+                        property: "file",
+                        type: "string",
+                        format: "binary"
+                    )
+                ]
+            )
+        )
+    ),
+ responses: [
+            new OA\Response(
+                response: 201,
+                description: "Author created successfully",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "message", type: "string", example: "file uploaded successfully"),
+                        new OA\Property(property: "author", type: "object"),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: "Validation error",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "message", type: "string", example: "The file  is required."),
+                        new OA\Property(property: "errors", type: "object"),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: "Unauthorized",
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: "error", example: "Unauthorized"),
+                    ]
+                )
+            ),
+        ]
+    )]      
+      public function handleFileImage(FileRequest $request){
+            
+        $user=Auth::user();
+        $file=$request->file('file');
+        $filename=Str::random(20);
+        $filename = $filename . '-' . time() . '.' . $file->getClientOriginalExtension();
+        $path=$file->storeAs('images',$filename,'public');
+
+        $profileImage = userProfile::create([
+        'user_id' => $user->id,
+        'path' => $path,
+    ]);
+          
+        return response()->json([
+            'message' => 'Profile image uploaded successfully',
+            'profile' => $profileImage,
+        ]);
+        
+        }
 }
 
 

@@ -19,6 +19,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/user', [AuthController::class, 'getUser']);
     Route::put('/user', [AuthController::class, 'updateUser'])->middleware('permission:profile.update');
     Route::delete('/user', [AuthController::class, 'deleteUser']);
+    Route::post('/user/profile-image', [AuthController::class, 'handleFileImage']);
 });
 
 // Author routes
@@ -75,6 +76,7 @@ Route::middleware(['auth:api', 'role:administrator'])->group(function () {
     Route::get('/user-role/{id}', [PermissionController::class, 'getUserRole']);
     Route::get('/get-roles', [PermissionController::class, 'getRoles']);
     Route::get('/get-permissions', [PermissionController::class, 'getPermissions']);
+    
 });
 
 // borrowing route

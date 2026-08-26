@@ -38,6 +38,9 @@ class User extends Authenticatable implements JWTSubject
         'remember_token',
     ];
 
+    public function file(){
+        return $this->hasOne(userProfile::class);
+    }
     public function member()
     {
         return $this->hasOne(Member::class);

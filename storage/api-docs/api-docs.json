@@ -290,6 +290,94 @@
                 ]
             }
         },
+        "/api/user/profile-image": {
+            "post": {
+                "tags": [
+                    "Libry"
+                ],
+                "summary": "Upload user profile image",
+                "operationId": "0170b86cc32cd7de274ac7455c73500c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Author created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "file uploaded successfully"
+                                        },
+                                        "author": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The file  is required."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/authors": {
             "get": {
                 "tags": [
@@ -3279,14 +3367,25 @@
                 ]
             }
         },
-        "/api/auth/reservations": {
+        "/api/reservations/{id}": {
             "get": {
                 "tags": [
                     "reserve"
                 ],
                 "summary": "Get a specific reservation",
                 "description": "Display the specified resource.",
-                "operationId": "b72314e690cf4e80617aa5b650b2592b",
+                "operationId": "a226b43b2a6a846245e658d01bf00720",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Reservation ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Reservation retrieved successfully",
@@ -3341,9 +3440,7 @@
                         "bearerAuth": []
                     }
                 ]
-            }
-        },
-        "/api/reservations/{id}": {
+            },
             "delete": {
                 "tags": [
                     "reserve"
@@ -3432,6 +3529,10 @@
         {
             "name": "libry",
             "description": "libry"
+        },
+        {
+            "name": "Libry",
+            "description": "Libry"
         },
         {
             "name": "Authors",
